@@ -1,0 +1,17 @@
+body{
+  background: #777;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+ul, li { list-style-type: none; margin: 0px; padding: 0px; }
+.clear { clear: both}
+
+/*color*/
+.white{
+  color: #ffffff;
+}
+.gray{
+  color: rgba(255,255,255,0.5)
+}
+
