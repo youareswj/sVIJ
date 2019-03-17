@@ -7,14 +7,24 @@
       </div>
       <div class="clear"></div>
     </div>
+    <scroller :on-refresh="refresh"
+              :on-infinite="infinite" refresh-text="There Is Nothing" noDataText="没有啦!" ref="scroll" style="position:absolute;top:auto" height="100%">
+      <div class="clear"></div>
     <div class="songlist">
-      <li v-for="items in list"><p class="white">{{items.musicData.songname}}</p><p class="gray">{{artist}}.{{items.musicData.albumname}}</p></li>
+      <ul>
+        <li v-for="items in list"><p><router-link :to="{path:'/player',query:{id:items.musicData.songmid}}">{{items.musicData.songname}}</router-link></p><p class="gray">{{artist}}.{{items.musicData.albumname}}</p></li>
+      </ul>
     </div>
+    </scroller>
   </div>
 </template>
 
 <script>
-  import axios from 'axios'
+  import  Vue from 'vue'
+  import {getJson} from 'static/js/getJson' //static地址要base文件resolve
+  import VueScroller from 'vue-scroller'
+  Vue.use(VueScroller);
+
   const first = [1,2,3];
   const param = {
     singermid:'0025NhlN2yWrP4',
@@ -30,21 +40,45 @@ export default {
   data () {
     return {
        artist:'',
+       songid:'',
        list : []
     }
   },
-  created () {
-    this.$ajax()
+  mounted(){
+    this.top = 1;
+    this.bottom = 20;
+  },
+  created(){
+    this.$ajax();
   },
   methods:{
-    $ajax:function () {
-      axios.get('/api/v8/fcg-bin/fcg_v8_singer_track_cp.fcg',{
-        params:param
-      }).then(res=>{
-        console.log(res);
-        this.artist = res.data.data.singer_name;
-        this.list = res.data.data.list;
-      })
+  $ajax:function () {
+    const _self = this; //将this传递出来
+    getJson('/api/v8/fcg-bin/fcg_v8_singer_track_cp.fcg',param,function (res) {
+        _self.artist = res.data.data.singer_name;
+        _self.list = res.data.data.list;
+    })
+    },
+
+    refresh (done) {
+      this.$refs.scroll.finishPullToRefresh()//禁用下拉更新
+    },
+
+    infinite (done) { //上拉加载数据
+      if(this.bottom>=30){
+        setTimeout(() => {
+          done(true)
+        }, 1500)
+        return;
+      }
+      const _self = this;
+      setTimeout(() => {
+        let start = this.bottom + 1
+        this.bottom = this.bottom + 10;
+        setTimeout(() => {
+          done()
+        })
+      }, 1500)
     }
   }
 }
@@ -75,6 +109,7 @@ export default {
   }
   .songlist{
     margin-top: 2%;
+    margin-bottom: 10%;
     width: 100%;
     overflow: hidden;
   }
@@ -82,5 +117,8 @@ export default {
   .songlist p{
     text-align: left;
     padding-left: 22px;
+  }
+  .songlist p a{
+    color: #fff;
   }
 </style>

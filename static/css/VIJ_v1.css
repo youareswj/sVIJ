@@ -4,6 +4,9 @@ body{
   padding: 0;
   overflow: hidden;
 }
+a { text-decoration: none; }
+a:link, a:visited { color: #000; }
+a:hover { text-decoration: underline; }
 ul, li { list-style-type: none; margin: 0px; padding: 0px; }
 .clear { clear: both}
 
@@ -14,4 +17,8 @@ ul, li { list-style-type: none; margin: 0px; padding: 0px; }
 .gray{
   color: rgba(255,255,255,0.5)
 }
+._v-container>._v-content>.loading-layer>.no-data-text[data-v-ecaca2b0], ._v-container>._v-content>.loading-layer>.spinner-holder[data-v-ecaca2b0]{
+  opacity: 1;
+}
+
 

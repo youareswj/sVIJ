@@ -1,16 +1,20 @@
 <template>
   <div id="app">
-    <SongerList></SongerList>
+    <router-view>
+      <SongerList></SongerList>
+    </router-view>
   </div>
 </template>
 
 <script>
-import SongerList from '@/components/SongerList'
-export default {
-  data (){
+  import SongerList from '@/components/SongerList'
+
+  export default {
+    data (){
     return {}
   },
-  components: {SongerList}
+  components: {SongerList},
+
 }
 </script>
 
