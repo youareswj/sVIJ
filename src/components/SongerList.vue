@@ -61,7 +61,7 @@ export default {
     },
 
     refresh (done) {
-      this.$refs.scroll.finishPullToRefresh()//禁用下拉更新
+      done(true)//禁用下拉更新
     },
 
     infinite (done) { //上拉加载数据
