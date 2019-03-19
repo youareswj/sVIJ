@@ -1,35 +1,35 @@
 import axios from 'axios'
 
-function getJson(url,param,callbak) {
-  axios.get(url,{
-    params:param
-  }).then(res=>{
-     callbak(res);
-  }).catch(error=>{
-    console.log(error);
+//获取列表数据
+function getJson (url, param, callbak) {
+  axios.get(url, {
+    params: param
+  }).then(res => {
+    callbak(res)
+  }).catch(error => {
+    console.log(error)
   })
 }
-function loadXMLDoc(xmlFile){
-  var xmlDoc;
-  try{
-    //Internet Explorer 可以使用其原生方法加载 XML
-    xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
-  }catch(e){
-    try{
-      //Firefox 也有标准方法,但可能造成其他浏览器报错,故省略
-      //使用 XMLHttpRequest 替代,适用于大部分浏览器
-      var xmlHttp=new XMLHttpRequest() ;
-      xmlHttp.open("GET",xmlFile,false) ;
-      xmlHttp.send(null) ;
-      return xmlHttp.responseXML;
-    }catch(e){
-      return null;
-    }
+
+//获取xml数据项值
+function dealxml (xml, tgname) {
+  const xmlel = new DOMParser()
+  const str = xml.toString()
+  const result = xmlel.parseFromString(str, 'text/xml')
+  const items = result.getElementsByTagName(tgname)
+  const desc = []
+  for (let i = 0; i < items.length; i++) {
+    desc.push(items[i].textContent)
   }
-  xmlDoc.async=false;
-  xmlDoc.load(xmlFile);
-  return xmlDoc;
+  return desc
 }
 
-export {getJson,loadXMLDoc}
+//xml转json格式
+function toJson (str) {
+  const s = dealxml(str)
+  const obj = eval('(' + s + ')')
+  return obj
+}
+
+export {getJson, dealxml}
 
