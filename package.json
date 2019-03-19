@@ -19,7 +19,8 @@
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vue-scroll": "^2.1.9",
-    "vue-scroller": "^2.2.4"
+    "vue-scroller": "^2.2.4",
+    "x2js": "^3.2.6"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

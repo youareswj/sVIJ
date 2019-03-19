@@ -21,17 +21,24 @@
 
 <script>
   import  Vue from 'vue'
-  import {getJson} from 'static/js/getJson' //static地址要base文件resolve
+  import  x2js from 'x2js'
+  import {getJson,loadXMLDoc} from 'static/js/getJson' //static地址要base文件resolve
   import VueScroller from 'vue-scroller'
   Vue.use(VueScroller);
 
-  const first = [1,2,3];
   const param = {
     singermid:'0025NhlN2yWrP4',
     order:'listen',
     begin:0,
     num:30,
     songstatus:1
+  }
+  const xmlparam = {
+    singermid:'0025NhlN2yWrP4',
+    utf8:'1',
+    outCharset:'utf-8',
+    format:'xml',
+    r:'1552980603130'
   }
 
 
@@ -57,6 +64,13 @@ export default {
     getJson('/api/v8/fcg-bin/fcg_v8_singer_track_cp.fcg',param,function (res) {
         _self.artist = res.data.data.singer_name;
         _self.list = res.data.data.list;
+    })
+    getJson('/api/splcloud/fcgi-bin/fcg_get_singer_desc.fcg',xmlparam,function (res){
+      const json = x2js.xml_str2json(res)
+      console.log(x2js)
+      // const reg = /[\u4e00-\u9fa5\d]/g;
+      // var xml = res.data.desc.match(reg).join('');
+      console.log(res.data)
     })
     },
 
@@ -108,10 +122,13 @@ export default {
     margin: 0;
   }
   .songlist{
-    margin-top: 2%;
     margin-bottom: 10%;
     width: 100%;
     overflow: hidden;
+    background: rgb(0,0,0,.5);
+  }
+  .songlist ul li{
+    line-height: 32px;
   }
 
   .songlist p{
