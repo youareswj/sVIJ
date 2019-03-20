@@ -2,21 +2,11 @@
   <div class="bg">
     <div class="drag">
       <div class="m-song-turn">
-        <img src="/static/img/jay.jpg" class="paused" @click="animat(1,$event)">
+        <img v-lazy="albumpic" class="paused" @click="animat(1,$event)">
         <span v-if="isplay"><img src="/static/img/play_x.png" class="paused" @click="animat(2,$event)"></span>
       </div>
       <div class="lyric">
-        <p id="line_0" class="lyrics__item">告白气球 - 周杰伦 (Jay Chou)</p>
-        <p id="line_1" class="lyrics__item">词：方文山</p>
-        <p id="line_2" class="lyrics__item">曲：周杰伦</p>
-        <p id="line_3" class="lyrics__item">塞纳河畔 左岸的咖啡</p>
-        <p id="line_4" class="lyrics__item">我手一杯 品尝你的美</p>
-        <p id="line_5" class="lyrics__item">留下唇印的嘴</p>
-        <p id="line_6" class="lyrics__item">花店玫瑰 名字写错谁</p>
-        <p id="line_7" class="lyrics__item">告白气球 风吹到对街</p>
-        <p id="line_8" class="lyrics__item">微笑在天上飞</p>
-        <p id="line_10" class="lyrics__item">你说你有点难追</p>
-        <p id="line_8" class="lyrics__item">想让我知难而退</p>
+        <p class="lyrics__item" v-for="items in lyricList">{{items}}</p>
       </div>
       <div class="menu">
         <a href="javascript:void(0)" class="loop_t"></a>
@@ -31,15 +21,60 @@
 </template>
 
 <script>
+  import {getJson} from 'static/js/getJson'
+
   export default {
     name: 'player',
     data(){
       return {
         id: this.$route.query.id,
+        songid:this.$route.query.songid,
+        lyricList:[],
+        albumpic:'',
         isplay: true
       }
     },
+    created(){
+     this.albumpic = 'https://y.gtimg.cn/music/photo_new/T002R150x150M000'+this.$route.query.alid+'.jpg?max_age=2592000'
+     this.getlyric()
+  },
     methods: {
+      getlyric:function(){
+        const _self = this
+        const lyParam ={
+          g_tk:5381,
+          uin:0,
+          format:'json',
+          inCharset:'utf-8',
+          outCharset:'utf-8',
+          notice:'0',
+          platform:'h5',
+          needNewCode:1,
+          nobase64:1,
+          musicid:this.songid,
+          songtype:0,
+          _:1553084771745,
+          jsonpCallback:'jsonp1'
+        }
+        getJson('/api/lyric/fcgi-bin/fcg_query_lyric.fcg',lyParam,(res)=>{
+          let jsonp = res.data
+          let reg = /^\w+\((\{[^()]+\})\)$/
+          let reg2 =  /[\u4e00-\u9fa5]/g
+          let matches = jsonp.match(reg)
+          if(matches){
+            matches = JSON.parse(matches[1]);
+          }
+          let lyricarr = matches.lyric.split('&#10;')
+          let lyricarr2 = []
+          for(let i in lyricarr){
+            if(lyricarr[i].match(reg2)!==null) {
+              lyricarr[i]=lyricarr[i].match(reg2).join('')
+              lyricarr2.push(lyricarr[i])
+            }
+          }
+          _self.lyricList = lyricarr2
+        })
+      },
       animat: function (i, el){
         if(i == 1){
           var thisclass = el.target.className
@@ -212,6 +247,21 @@
       width: 32px;
       height: 32px;
       background: url("/static/img/list.png");
+    }
+    img[lazy=loading] {
+      width: 40px;
+      height: 40px;
+      position: fixed;
+      margin-left: 18%;
+      margin-top: 20%;
+    }
+
+    img[lazy=error] {
+      width: 40px;
+      height: 40px;
+      position: fixed;
+      margin-left: 18%;
+      margin-top: 20%;
     }
     /*iphone 5/se*/
     @media  screen and (max-width: 360px){

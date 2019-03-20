@@ -15,7 +15,7 @@
         <ul>
           <li v-for="items in list">
             <p>
-              <router-link :to="{path:'/player',query:{id:items.musicData.songmid}}">{{items.musicData.songname}}
+              <router-link :to="{path:'/player',query:{id:items.musicData.songmid,alid:items.musicData.albummid,songid:items.musicData.songid}}">{{items.musicData.songname}}
               </router-link>
             </p>
             <p class="gray">{{artist}}.{{items.musicData.albumname}}</p></li>
@@ -53,6 +53,7 @@
         artist: '',
         artistid: '',
         artistDesc: '',
+        nums:2,
         list: [],
         mTotal:""
       }
@@ -73,10 +74,11 @@
       $ajax: function (){
         const _self = this //将this传递出来
         getJson('/api/v8/fcg-bin/fcg_v8_singer_track_cp.fcg', param, (res)=>{
-          _self.artist = res.data.data.singer_name;
-          _self.list = res.data.data.list;
-          _self.mTotal = res.data.data.total;
-          _self.artistid = 'https://y.gtimg.cn/music/photo_new/T001R300x300M000' + res.data.data.singer_mid + '.jpg';
+          _self.artist = res.data.data.singer_name;   //歌手姓名
+          _self.list = res.data.data.list;           //歌曲列表
+          _self.mTotal = res.data.data.total;       //总条数
+          // _self.albummid =res.data.data.list.musicData.albummid  //专辑图片
+          _self.artistid = 'https://y.gtimg.cn/music/photo_new/T001R300x300M000' + res.data.data.singer_mid + '.jpg';                                          //歌手图片
         })
         getJson('/api/splcloud/fcgi-bin/fcg_get_singer_desc.fcg', xmlparam, function (res){
           _self.artistDesc = dealxml(res.data, 'desc');
@@ -89,8 +91,9 @@
 
       infinite(done){ //上拉加载数据
         const _self = this
+        var counts = ++_self.nums
         const pgSize = param.num
-        const pgNo = param.begin+pgSize;
+        const pgNo = param.begin+pgSize*counts;
         var muTotal = ''
         var pulist = []
         const restart ={
@@ -203,7 +206,7 @@
     margin-top: 2%;
   }
   .songlist ul li:last-child{
-    margin-bottom: 10%;
+    margin-bottom: 6%;
   }
   .songlist p{
     font-size: 18px;
@@ -316,5 +319,10 @@
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 5;
     }
+  }
+</style>
+<style>
+  ._v-container>._v-content>.loading-layer>.no-data-text[data-v-ecaca2b0]{
+    top: -75%;
   }
 </style>
