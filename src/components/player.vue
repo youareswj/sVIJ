@@ -216,7 +216,7 @@
     /*iphone 5/se*/
     @media  screen and (max-width: 360px){
       .lyric{
-         height: 110%;
+        height: 110%;
       }
     }
 

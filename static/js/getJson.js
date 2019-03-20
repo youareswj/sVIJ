@@ -1,12 +1,12 @@
 import axios from 'axios'
 
 //获取列表数据
-function getJson (url, param, callbak) {
-  axios.get(url, {
+function getJson (url, param,callback) {
+   axios.get(url, {
     params: param
-  }).then(res => {
-    callbak(res)
-  }).catch(error => {
+  }).then(res=>{
+     callback(res)
+  }).catch(function (error){
     console.log(error)
   })
 }
