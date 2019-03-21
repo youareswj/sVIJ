@@ -12,6 +12,14 @@
           <p class="lyrics__item" v-for="(items,i) in lyricList" v-bind:id="'items_'+i" :class="[i==0?'curr':'']">{{items}}</p>
         </div>
       </div>
+      <!--进度条-->
+      <div class="bar">
+      <span class="sTime">00:00</span>
+        <div class="p_bar"><i class="audio_bar">
+          <span class="audio_btn"></span>
+        </i></div>
+      <div class="eTime">04:21</div>
+      </div>
       <!--底部操作菜单-->
       <div class="menu">
         <a href="javascript:void(0)" class="loop_t"></a>
@@ -33,7 +41,7 @@
       </ul>
     </div>
     <!--播放器-->
-    <audio ref="player"></audio>
+    <audio ref="player" :src="songurl"></audio>
   </div>
 </template>
 
@@ -47,6 +55,7 @@
         id: this.$route.query.id,
         songid:this.$route.query.songid,
         albid:this.$route.query.albid,
+        songurl:'',
         lyricList:[],
         albumpic:'',
         isplay: true,
@@ -59,6 +68,7 @@
         background: 'url(https://y.gtimg.cn/music/photo_new/T002R300x300M000'+this.albid+'.jpg?max_age=2592000)',
         backgroundSize:'100% 100%',
     }
+      this.songurl ='http://dl.stream.qqmusic.qq.com/C400'+this.id+'.m4a?guid=3049892704&vkey=CF502B6CC6350308D10D9D80625FAA4B0D6F0ED4B0B9C074045E11D0CE282E2A301E258162FC2E0938F7F0A858F138C2BF89D3E641E495C9&uin=0&fromtag=38'
       this.getlyric()
   },
     mounted(){
@@ -253,13 +263,56 @@
       width: 100%;
       opacity: .06;
     }
+    .bar{
+      width: 100%;
+      height: 8%;
+      position: relative;
+      bottom: -4%;
+      z-index: 400;
+    }
+    .sTime{
+      float: left;
+      color: #fff;
+      width: 20%;
+    }
+    .eTime{
+      float: left;
+      width: 20%;
+      color: #fff;
+    }
+    .p_bar{
+      float: left;
+      height: 3px;
+      background: #fff;
+      width: 60%;
+      margin-top: 2%;
+      position: relative;
+    }
+    .audio_bar{
+      position: absolute;
+      display: block;
+      font-style: normal;
+      width: 10%;
+      height: 2px;
+      background-color: #19d8bf;
+      z-index: 400;
+    }
+    .audio_btn{
+      position: absolute;
+      margin-top: -3px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #fff;
+    }
     .playlist{
       width: 100%;
       position: absolute;
       z-index: 100;
       background: #fff;
       border-radius: 20px 20px 0 0;
-      margin-bottom:-10% ;
+      bottom:0;
+      display: none;
     }
     .playlist ul li{
       text-align: left;
