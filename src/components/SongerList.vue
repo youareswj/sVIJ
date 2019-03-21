@@ -15,7 +15,7 @@
         <ul>
           <li v-for="items in list">
             <p>
-              <router-link :to="{path:'/player',query:{id:items.musicData.songmid,alid:items.musicData.albummid,songid:items.musicData.songid}}">{{items.musicData.songname}}
+              <router-link :to="{path:'/player',query:{id:items.musicData.songmid,alid:items.musicData.albummid,songid:items.musicData.songid,albid:items.musicData.albummid}}">{{items.musicData.songname}}
               </router-link>
             </p>
             <p class="gray">{{artist}}.{{items.musicData.albumname}}</p></li>
@@ -26,7 +26,7 @@
 </template>
 <script>
   import Vue from 'vue'
-  import {getJson, dealxml} from 'static/js/getJson' //static地址要base文件resolve
+  import {base, dealxml} from 'static/js/base' //static地址要base文件resolve
   import VueScroller from 'vue-scroller'
 
   Vue.use(VueScroller)
@@ -73,14 +73,14 @@
     methods: {
       $ajax: function (){
         const _self = this //将this传递出来
-        getJson('/api/v8/fcg-bin/fcg_v8_singer_track_cp.fcg', param, (res)=>{
+        base('/api/v8/fcg-bin/fcg_v8_singer_track_cp.fcg', param, (res)=>{
           _self.artist = res.data.data.singer_name;   //歌手姓名
           _self.list = res.data.data.list;           //歌曲列表
           _self.mTotal = res.data.data.total;       //总条数
           // _self.albummid =res.data.data.list.musicData.albummid  //专辑图片
           _self.artistid = 'https://y.gtimg.cn/music/photo_new/T001R300x300M000' + res.data.data.singer_mid + '.jpg';                                          //歌手图片
         })
-        getJson('/api/splcloud/fcgi-bin/fcg_get_singer_desc.fcg', xmlparam, function (res){
+        base('/api/splcloud/fcgi-bin/fcg_get_singer_desc.fcg', xmlparam, function (res){
           _self.artistDesc = dealxml(res.data, 'desc');
         })
       },
@@ -103,7 +103,7 @@
           num: pgSize,
           songstatus: param.songstatus
         }
-        getJson('/api/v8/fcg-bin/fcg_v8_singer_track_cp.fcg',restart,(res)=>{
+        base('/api/v8/fcg-bin/fcg_v8_singer_track_cp.fcg',restart,(res)=>{
           muTotal = res.data.data.total
           pulist = res.data.data.list
           // console.log(muTotal,_self.list)
