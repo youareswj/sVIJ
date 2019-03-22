@@ -13,12 +13,14 @@
         </div>
       </div>
       <!--进度条-->
+      <div>
       <div class="bar">
-      <span class="sTime">00:00</span>
+        <div class="sTime">00:00</div>
+        <div class="eTime">04:21</div>
         <div class="p_bar"><i class="audio_bar">
           <span class="audio_btn"></span>
         </i></div>
-      <div class="eTime">04:21</div>
+      </div>
       </div>
       <!--底部操作菜单-->
       <div class="menu">
@@ -68,7 +70,15 @@
         background: 'url(https://y.gtimg.cn/music/photo_new/T002R300x300M000'+this.albid+'.jpg?max_age=2592000)',
         backgroundSize:'100% 100%',
     }
-      this.songurl ='http://dl.stream.qqmusic.qq.com/C400'+this.id+'.m4a?guid=3049892704&vkey=CF502B6CC6350308D10D9D80625FAA4B0D6F0ED4B0B9C074045E11D0CE282E2A301E258162FC2E0938F7F0A858F138C2BF89D3E641E495C9&uin=0&fromtag=38'
+      // const target_url = `${'https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&'
+      //   + 'hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&'
+      //   + 'platform=yqq.json&needNewCode=0&data=%7B%22req_0%22%3A%7B%22'
+      //   + 'module%22%3A%22vkey.GetVkeyServer%22%2C%22method%22%3A%22'
+      //   + 'CgiGetVkey%22%2C%22param%22%3A%7B%22guid%22%3A%2210000%22%2C%22songmid%22%3A%5B%22'}${
+      //     songId}%22%5D%2C%22songtype%22%3A%5B0%5D%2C%22uin%22%3A%220%22%2C%22loginflag%22`
+      //   + '%3A1%2C%22platform%22%3A%2220%22%7D%7D%2C%22comm%22%3A%7B%22uin%22%3A0%2C%22'
+      //   + 'format%22%3A%22json%22%2C%22ct%22%3A20%2C%22cv%22%3A0%7D%7D';
+      this.songurl ='/music/C400'+this.id+'.m4a?guid=3049892704&vkey=CF502B6CC6350308D10D9D80625FAA4B0D6F0ED4B0B9C074045E11D0CE282E2A301E258162FC2E0938F7F0A858F138C2BF89D3E641E495C9&uin=0&fromtag=38'
       this.getlyric()
   },
     mounted(){
@@ -264,38 +274,39 @@
       opacity: .06;
     }
     .bar{
-      width: 100%;
-      height: 8%;
+      height: 20px;
       position: relative;
       bottom: -4%;
       z-index: 400;
+      padding: 0 20%;
     }
     .sTime{
-      float: left;
+      position: absolute;
+      left: 0;
       color: #fff;
       width: 20%;
     }
     .eTime{
-      float: left;
+      position: absolute;
+      right: 0;
       width: 20%;
       color: #fff;
     }
     .p_bar{
-      float: left;
+      position: relative;
       height: 3px;
       background: #fff;
-      width: 60%;
-      margin-top: 2%;
-      position: relative;
+      top:50%;
     }
     .audio_bar{
       position: absolute;
-      display: block;
       font-style: normal;
-      width: 10%;
+      width: 0;
       height: 2px;
       background-color: #19d8bf;
       z-index: 400;
+      left: 0;
+      top: 0;
     }
     .audio_btn{
       position: absolute;
@@ -304,6 +315,7 @@
       height: 10px;
       border-radius: 50%;
       background-color: #fff;
+      right: -7px;
     }
     .playlist{
       width: 100%;
