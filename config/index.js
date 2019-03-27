@@ -13,13 +13,24 @@ module.exports = {
     proxyTable: {
       '/api':{
         target:'https://c.y.qq.com',
-        secure:false,            //如果是请求https
+        secure:true,            //如果是请求https
         changeOrigin: true,      //是否跨域
         pathRewrite:{
           '^/api':''
         },
         headers:{
           referer:'https://c.y.qq.com'
+        }
+      },
+      '/music':{
+        target:'https://u.y.qq.com/cgi-bin/musicu.fcg',
+        secure:true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/music':''
+        },
+        headers:{
+          referer:'https://u.y.qq.com/cgi-bin/musicu.fcg'
         }
       }
     },

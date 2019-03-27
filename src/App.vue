@@ -13,8 +13,7 @@
     data (){
     return {}
   },
-  components: {SongerList},
-
+  components: {SongerList}
 }
 </script>
 

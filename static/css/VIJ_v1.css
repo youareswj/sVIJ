@@ -16,12 +16,17 @@ a {
   text-decoration: none;
 }
 
-a:link, a:visited {
-  color: #000;
-}
-
 a:hover {
   text-decoration: underline;
+}
+
+a:link, a:visited {
+  color: #000;
+  text-decoration:none;
+}
+
+a:active{
+  text-decoration: none;
 }
 
 ul, li {

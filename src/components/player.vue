@@ -26,7 +26,7 @@
       <div class="menu">
         <a href="javascript:void(0)" class="loop_t"></a>
         <a href="javascript:void(0)" class="pre"></a>
-        <a href="javascript:void(0)" class="play"></a>
+        <a href="javascript:void(0)" class="play" @click="play"></a>
         <a href="javascript:void(0)" class="next"></a>
         <a href="javascript:void(0)" class="list"></a>
         <div class="clear"></div>
@@ -48,15 +48,15 @@
 </template>
 
 <script>
-  import {base} from 'static/js/base'
+  import {getJson,getMUrl} from 'static/js/base'
 
   export default {
     name: 'player',
     data(){
       return {
-        id: this.$route.query.id,
-        songid:this.$route.query.songid,
-        albid:this.$route.query.albid,
+        id: this.$route.query.id,          //歌曲url传入id
+        songid:this.$route.query.songid,  //歌曲图片、歌词id
+        albid:this.$route.query.alid,   //页面传入背景图
         songurl:'',
         lyricList:[],
         albumpic:'',
@@ -65,21 +65,24 @@
       }
     },
     created(){
-      this.albumpic = 'https://y.gtimg.cn/music/photo_new/T002R150x150M000'+this.$route.query.alid+'.jpg?max_age=2592000'
+      this.albumpic = 'https://y.gtimg.cn/music/photo_new/T002R150x150M000'+this.albid+'.jpg?max_age=2592000'
       this.bgcss= {
         background: 'url(https://y.gtimg.cn/music/photo_new/T002R300x300M000'+this.albid+'.jpg?max_age=2592000)',
         backgroundSize:'100% 100%',
     }
-      // const target_url = `${'https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&'
-      //   + 'hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&'
-      //   + 'platform=yqq.json&needNewCode=0&data=%7B%22req_0%22%3A%7B%22'
-      //   + 'module%22%3A%22vkey.GetVkeyServer%22%2C%22method%22%3A%22'
-      //   + 'CgiGetVkey%22%2C%22param%22%3A%7B%22guid%22%3A%2210000%22%2C%22songmid%22%3A%5B%22'}${
-      //     songId}%22%5D%2C%22songtype%22%3A%5B0%5D%2C%22uin%22%3A%220%22%2C%22loginflag%22`
-      //   + '%3A1%2C%22platform%22%3A%2220%22%7D%7D%2C%22comm%22%3A%7B%22uin%22%3A0%2C%22'
-      //   + 'format%22%3A%22json%22%2C%22ct%22%3A20%2C%22cv%22%3A0%7D%7D';
-      this.songurl ='/music/C400'+this.id+'.m4a?guid=3049892704&vkey=CF502B6CC6350308D10D9D80625FAA4B0D6F0ED4B0B9C074045E11D0CE282E2A301E258162FC2E0938F7F0A858F138C2BF89D3E641E495C9&uin=0&fromtag=38'
+      const songurl = `${'/music?loginUin=0&'
+        + 'hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&'
+        + 'platform=yqq.json&needNewCode=0&data=%7B%22req_0%22%3A%7B%22'
+        + 'module%22%3A%22vkey.GetVkeyServer%22%2C%22method%22%3A%22'
+        + 'CgiGetVkey%22%2C%22param%22%3A%7B%22guid%22%3A%2210000%22%2C%22songmid%22%3A%5B%22'}${
+          this.id}%22%5D%2C%22songtype%22%3A%5B0%5D%2C%22uin%22%3A%220%22%2C%22loginflag%22`
+        + '%3A1%2C%22platform%22%3A%2220%22%7D%7D%2C%22comm%22%3A%7B%22uin%22%3A0%2C%22'
+        + 'format%22%3A%22json%22%2C%22ct%22%3A20%2C%22cv%22%3A0%7D%7D';
+        getMUrl(songurl,res=>{
+          this.songurl = `${res.data.req_0.data.sip[0]}${res.data.req_0.data.midurlinfo[0].purl}`
+        })
       this.getlyric()
+
   },
     mounted(){
       this.lyrics()
@@ -102,7 +105,7 @@
           _:1553084771745,
           jsonpCallback:'jsonp1'
         }
-        base('/api/lyric/fcgi-bin/fcg_query_lyric.fcg',lyParam,(res)=>{
+        getJson('/api/lyric/fcgi-bin/fcg_query_lyric.fcg',lyParam,(res)=>{
           let jsonp = res.data
           let reg = /^\w+\((\{[^()]+\})\)$/
           let reg2 =  /[\u4e00-\u9fa5]/g
@@ -153,6 +156,9 @@
         //     this.$refs.lyscroll.style.top = -top + 'px'
         //   }
         //   },1000)
+      },
+      play:function () {
+        this.$refs.player.play()
       }
     }
   }
